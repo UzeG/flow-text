@@ -5,22 +5,16 @@ const setElTranslateX = (el, px) => {
     el.style.transform = `translate(${px}px)`;
 }
 
-const resolveUrl = (url = document.URL) => {
-    const splitRes = url.split("/");
-    const res = { text: null, speedRate: null };
-    try {
-        res.text = splitRes[3];
-    } catch { }
-    try {
-        res.speedRate = Number(splitRes[4]);
-    } catch { }
-    return res;
+const resolveUrl = () => {
+    console.log(window.location.search);
+    const urlParams = new URLSearchParams(window.location.search);
+    return { text: urlParams.get('text'), speed: urlParams.get('speed') };
 }
 
 window.onload = function () {
-    const { text, speedRate } = resolveUrl();
+    const { text, speed } = resolveUrl();
     text && (flowText = text);
-    speedRate && (flowSpeedRate = speedRate);
+    speed && (flowSpeedRate = speed);
 
     const rootEl = document.getElementById("root");
 
