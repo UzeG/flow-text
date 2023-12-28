@@ -1,13 +1,13 @@
 let flowText = "Hello World!";
 let flowSpeedRate = 2;
 
-const setElTranslateX = (el: HTMLElement, px: number) => {
+const setElTranslateX = (el, px) => {
     el.style.transform = `translate(${px}px)`;
 }
 
-const resolveUrl = (url: string = document.URL): { text: string | null, speedRate: number | null } => {
+const resolveUrl = (url = document.URL) => {
     const splitRes = url.split("/");
-    const res: { text: string | null, speedRate: number | null } = { text: null, speedRate: null };
+    const res = { text: null, speedRate: null };
     try {
         res.text = splitRes[3];
     } catch { }
@@ -22,12 +22,12 @@ window.onload = function () {
     text && (flowText = text);
     speedRate && (flowSpeedRate = speedRate);
 
-    const rootEl = document.getElementById("root") as HTMLDivElement;
+    const rootEl = document.getElementById("root");
 
     let flowTextEl1 = document.createElement("div");
     flowTextEl1.textContent = flowText;
     flowTextEl1.classList.add("flow-text");
-    let flowTextEl2 = flowTextEl1.cloneNode(true) as HTMLDivElement;
+    let flowTextEl2 = flowTextEl1.cloneNode(true);
 
     rootEl.appendChild(flowTextEl1);
     rootEl.appendChild(flowTextEl2);
