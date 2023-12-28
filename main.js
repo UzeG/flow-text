@@ -6,7 +6,6 @@ const setElTranslateX = (el, px) => {
 }
 
 const resolveUrl = () => {
-    console.log(window.location.search);
     const urlParams = new URLSearchParams(window.location.search);
     return { text: urlParams.get('text'), speed: urlParams.get('speed') };
 }
