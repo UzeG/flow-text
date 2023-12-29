@@ -22,4 +22,5 @@ body * {
   font-size: 10rem;
   font-weight: bolder;
   color: #fff;
+  user-select: none;
 }
