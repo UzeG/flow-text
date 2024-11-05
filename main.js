@@ -1,7 +1,7 @@
 let flowText = "Hello World!";
 let flowSpeedRate = 2;
 
-let windowWidthRate = 1;
+let windowWidthRate = 0.4;
 
 let windowWidth = 0;
 
