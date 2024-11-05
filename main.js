@@ -1,6 +1,9 @@
 let flowText = "Hello World!";
 let flowSpeedRate = 2;
-let sizeRate = 1;
+
+let windowWidthRate = 1;
+
+let windowWidth = 0;
 
 const setElTranslateX = (el, px) => {
     el.style.transform = `translate(${px}px)`;
@@ -8,7 +11,7 @@ const setElTranslateX = (el, px) => {
 
 const resolveUrl = () => {
     const urlParams = new URLSearchParams(window.location.search);
-    return { text: urlParams.get('text'), speed: Number(urlParams.get('speed')), size: Number(urlParams.get('size')) };
+    return { text: urlParams.get('text'), speed: Number(urlParams.get('speed')), rate: Number(urlParams.get('rate')) };
 }
 
 let isFullScreen = false;
@@ -21,9 +24,20 @@ window.onload = function () {
             document.body.requestFullscreen();
         }
         isFullScreen = !isFullScreen;
-    })
+    });
 
-    const { text, speed, size } = resolveUrl();
+    window.addEventListener('resize', () => {
+        translateX = 0;
+
+        adjustFlowTextElWidth();
+        windowWidth = window.innerWidth;
+
+        setElTranslateX(flowTextEl2, -flowTextEl1.clientWidth);
+    });
+
+    windowWidth = window.innerWidth;
+
+    const { text, speed, size, rate } = resolveUrl();
 
     if (text) {
         flowText = text;
@@ -41,21 +55,56 @@ window.onload = function () {
         l_flowSpeedRate ? (flowSpeedRate = l_flowSpeedRate) : localStorage.setItem('speed', flowSpeedRate);
     }
 
-    if (size) {
-        sizeRate = size;
-        localStorage.setItem('size', sizeRate);
+    if (rate) {
+        windowWidthRate = rate;
+        localStorage.setItem('rate', windowWidthRate);
     } else {
-        const l_sizeRate = localStorage.getItem('size');
-        l_sizeRate ? (sizeRate = l_sizeRate) : localStorage.setItem('size', sizeRate);
+        const l_windowWidthRate = localStorage.getItem('rate');
+        l_windowWidthRate ? (windowWidthRate = l_windowWidthRate) : localStorage.setItem('rate', windowWidthRate);
     }
 
+
     const rootEl = document.getElementById("root");
+    const cloakEl = document.getElementById("cloak");
 
     let flowTextEl1 = document.createElement("div");
     flowTextEl1.textContent = flowText;
     flowTextEl1.classList.add("flow-text");
-    flowTextEl1.style.setProperty('font-size', `${10 * sizeRate}rem`)
+    flowTextEl1.style.fontSize = windowWidth * windowWidthRate + 'px';
     let flowTextEl2 = flowTextEl1.cloneNode(true);
+
+    const adjustFlowTextElWidth = () => {
+        flowTextEl1.style.setProperty('width', window.innerWidth * windowWidthRate + 'px');
+
+        let f = Number(flowTextEl1.style.fontSize.split('px')[0]);
+        if (window.innerWidth > windowWidth) {
+            while (flowTextEl1.scrollWidth <= flowTextEl1.clientWidth) {
+                f += 1;
+                flowTextEl1.style.fontSize = f + 'px'
+            }
+        } else {
+            while (flowTextEl1.scrollWidth > flowTextEl1.clientWidth) {
+                f -= 1;
+                flowTextEl1.style.fontSize = f + 'px'
+            }
+        }
+        flowTextEl2.style.fontSize = flowTextEl1.style.fontSize;
+    }
+
+    setTimeout(() => {
+        flowTextEl1.style.setProperty('width', windowWidth * windowWidthRate + 'px');
+        let f = windowWidth * windowWidthRate;
+        while (flowTextEl1.scrollWidth > flowTextEl1.clientWidth) {
+            f -= 1;
+            flowTextEl1.style.fontSize = f + 'px'
+        }
+        // while (flowTextEl1.scrollWidth < flowTextEl1.clientWidth) {
+        //     f += 1;
+        //     flowTextEl1.style.fontSize = f + 'px'
+        // }
+        flowTextEl2.style.fontSize = flowTextEl1.style.fontSize;
+        cloakEl.style.opacity = 0;
+    }, 100);
 
     rootEl.appendChild(flowTextEl1);
     rootEl.appendChild(flowTextEl2);
@@ -67,7 +116,7 @@ window.onload = function () {
     let translateX = 0;
     setInterval(() => {
         translateX += deltaTime * flowSpeedRate;
-
+        // translateX = 0;
         setElTranslateX(flowTextEl1, translateX);
 
         const overLength = translateX - (rootEl.clientWidth - flowTextEl1.clientWidth);
