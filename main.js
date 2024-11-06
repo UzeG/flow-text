@@ -88,7 +88,8 @@ window.onload = function () {
                 flowTextEl1.style.fontSize = f + 'px'
             }
         }
-        flowTextEl2.style.fontSize = flowTextEl1.style.fontSize;
+        flowTextEl2.style.setProperty('width', flowTextEl1.style.width);
+        flowTextEl2.style.setProperty('font-size', flowTextEl1.style.fontSize);
     }
 
     setTimeout(() => {
